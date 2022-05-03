@@ -6,11 +6,12 @@ const form = document.querySelector("#cotizar-seguro");
 //eventlisteners
 eventlisteners();
 function eventlisteners(){
+    //fill year select
     document.addEventListener("DOMContentLoaded", () => {
         ui.fillOptions();
     });
 
-    form.addEventListener("submit", quoteSecure);
+    form.addEventListener("submit", quoteInsurance);
 }
 
 
@@ -18,13 +19,15 @@ function eventlisteners(){
 //functions
 
 //constructors
-function Secure(brand, year, type) {
+function Insurance(brand, year, type) {
     this.brand = brand;
     this.year = year;
     this.type = type;
 };
 
-Secure.prototype.quoteSecure = function() {
+
+//this prototype get the ammount of the insurance
+Insurance.prototype.quoteInsurance = function() {
 
     let quantity;
     const base = 2000;
@@ -64,6 +67,7 @@ Secure.prototype.quoteSecure = function() {
     return quantity;
 }
 
+//Constructor object for the UI
 function UI() {};
 
 
@@ -104,9 +108,10 @@ UI.prototype.showMessage = (message, typeofmessage) => {
     setTimeout(() => div.remove(), 3000);
 }
 
-UI.prototype.showResult = (total, secure) => {
-    const {brand, year, selectedType} = secure;
-    console.log(selectedType);
+//prototype to show in the html the result of the calculation and the info of the Auto
+
+UI.prototype.showResult = (total, insurance) => {
+    const {brand, year, type} = insurance;
     let brandText;
     switch(brand) {
         case "1":
@@ -126,7 +131,7 @@ UI.prototype.showResult = (total, secure) => {
     const div = document.createElement("div");
     div.innerHTML = `
         <p class="header">Tu resumen</p>
-        <p class="font-bold">Tipo: <span class="font-normal">${selectedType}</span></p>
+        <p class="font-bold">TIPO: <span class="font-normal">${type}</span></p>
         <p class="font-bold">Marca: <span class="font-normal">${brandText}</span></p>
         <p class="font-bold">Ano: <span class="font-normal">${year}</span></p>
         <p class="font-bold">Total: <span class="font-normal">$${total}</span></p>
@@ -150,7 +155,7 @@ UI.prototype.showResult = (total, secure) => {
 const ui = new UI();
 
 
-function quoteSecure(e) {
+function quoteInsurance(e) {
     e.preventDefault();
     
     //read selected brand
@@ -169,18 +174,18 @@ function quoteSecure(e) {
 
     ui.showMessage("Todo correcto!", "correcto");
 
-    //Inicitiali secure
+    //Initialize insurance
 
-    const secure = new Secure(brand, year, selectedType);
-    const total = secure.quoteSecure();
+    const insurance = new Insurance(brand, year, selectedType);
+    const total = insurance.quoteInsurance();
 
-    //Clear previus querys
+    //Clear previus results
     const results = document.querySelector("#resultado div");
     if(results != null) {
         results.remove();
     }
 
     //we use the prototype to show result
-    ui.showResult(total, secure);
+    ui.showResult(total, insurance);
     
 };
